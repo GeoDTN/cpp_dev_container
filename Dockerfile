@@ -19,7 +19,7 @@ LABEL Info.Branch="$INFO_BRANCH"
 LABEL Info.Commit="$INFO_COMMIT"
 LABEL Info.Namespace="$INFO_NAMESPACE"
 LABEL Info.Url="$INFO_URL"
-
+COPY build/00001  /home/${USER}/cpp/
 WORKDIR /home/${USER}/cpp/
 
-ENTRYPOINT ["./0001"]
+ENTRYPOINT ["./00001"]
