@@ -2,6 +2,8 @@
 #include <string>
 #include <utility>
 #include <string_view>
+#include <compare>
+#include <set>
 
 template<typename test>
 struct strct{
@@ -16,6 +18,8 @@ struct strct{
     {
         return value_;
     }
+    auto operator <=>(const strct& other) const = default;
+
     // need strict<T> as operator <<  is not member function
     template< class T>
     friend std::ostream& operator<<(std::ostream& os, const strct<T>& str);
@@ -43,4 +47,16 @@ int main()
 
     strct <std::string_view>  tmplt_test_string_view("test string_view");      // specify template parameter to specify desired deduction other than default deduction
     std::cout<< tmplt_test_string_view;
+
+    // C++20 spaceship operator
+    strct test_1(0);
+    strct test_2(1);
+    std::cout << std::boolalpha;
+    std::cout << (test_1 <=test_2) << "\n";
+    std::cout<< std::noboolalpha;
+
+    std::set<strct<int>> tests{strct(1), strct(2), strct(3), strct(4), strct(5), strct(6)};
+
+    for(auto value:tests) std::cout<< value<<"\n";
+
 }
