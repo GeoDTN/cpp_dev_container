@@ -10,9 +10,9 @@
 #include<cxxabi.h>
 
 template<typename test>
-struct strct{
-    using type = test;
-    explicit strct(type value_1, type value_2):value_1_(value_1), value_2_(value_2) {}
+struct default_spaceship{
+    using type = test;         // note test may need some requires or concept constraint in production code. this is just for demo
+    explicit default_spaceship(type value_1, type value_2):value_1_(value_1), value_2_(value_2) {}
     void set_value(type value_1, type value_2)
     {
         value_1_ = std::move(value_1);
@@ -24,11 +24,11 @@ struct strct{
         return std::tuple{value_1_, value_2_};
     }
     // comparison is defaulted to first class member
-    auto operator <=>(const strct& other) const = default;
+    auto operator <=>(const default_spaceship& other) const = default;
 
     // need strict<T> as operator <<  is not member function
     template< class T>
-    friend std::ostream& operator<<(std::ostream& os, const strct<T>& str);
+    friend std::ostream& operator<<(std::ostream& os, const default_spaceship<T>& str);
 
     private:
     type value_1_{};
@@ -36,7 +36,7 @@ struct strct{
 };
 
 template<typename test>
-std::ostream& operator<<(std::ostream& os, const strct<test>& str)
+std::ostream& operator<<(std::ostream& os, const default_spaceship<test>& str)
 {
     int status = 0;
     os << "[ overloaded operator value_1: " << str.value_1_ <<" ]";
@@ -48,7 +48,7 @@ std::ostream& operator<<(std::ostream& os, const strct<test>& str)
 
 template<typename T>
 struct custom_spaceship{
-    using type = T;
+    using type = T;         // note T may need some requires or concept constraint in production code. this is just for demo
     explicit custom_spaceship(type value_1, type value_2):value_1_(value_1), value_2_(value_2) {}
     void set_value(type value_1, type value_2)
     {
@@ -87,23 +87,23 @@ std::ostream& operator<<(std::ostream& os, const custom_spaceship<T>& spcship_te
 
 int main()
 {
-    strct/*<const char*>*/ tmplt_test_char("test const char* 1", "test const char* 2");                // const char* is deduced by default
+    default_spaceship/*<const char*>*/ tmplt_test_char("test const char* 1", "test const char* 2");                // const char* is deduced by default
     std::cout<< tmplt_test_char;
 
-    strct <std::string>  tmplt_test_string("test string 1", "test string 2");                          // specify template parameter to specify desired deduction other than default deduction
+    default_spaceship <std::string>  tmplt_test_string("test string 1", "test string 2");                          // specify template parameter to specify desired deduction other than default deduction
     std::cout<< tmplt_test_string;
 
-    strct <std::string_view>  tmplt_test_string_view("test string_view 1", "test string_view 2");      // specify template parameter to specify desired deduction other than default deduction
+    default_spaceship <std::string_view>  tmplt_test_string_view("test string_view 1", "test string_view 2");      // specify template parameter to specify desired deduction other than default deduction
     std::cout<< tmplt_test_string_view;
 
     // C++20 spaceship operator
-    strct test_1(0, 1);
-    strct test_2(1, 2);
+    default_spaceship test_1(0, 1);
+    default_spaceship test_2(1, 2);
     std::cout << std::boolalpha;
     std::cout << (test_1 <=test_2) << "\n";
     std::cout<< std::noboolalpha;
 
-    std::set<strct<int>> tests{strct(0,1), strct(1,2), strct(2,3), strct(3,4), strct(4,5), strct(5,6)};
+    std::set<default_spaceship<int>> tests{default_spaceship(0,1), default_spaceship(1,2), default_spaceship(2,3), default_spaceship(3,4), default_spaceship(4,5), default_spaceship(5,6)};
      
     for(auto value:tests) std::cout<< value<<"\n";
  
